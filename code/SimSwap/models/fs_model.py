@@ -67,7 +67,7 @@ class fsModel(BaseModel):
         self.netArc.eval()
 
         if not self.isTrain:
-            pretrained_path = '' if not self.isTrain else opt.load_pretrain
+            pretrained_path = 'code/Simswap/checkpoints/people' if not self.isTrain else opt.load_pretrain
             self.load_network(self.netG, 'G', opt.which_epoch, pretrained_path)
             return
 

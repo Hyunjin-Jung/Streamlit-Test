@@ -4,6 +4,11 @@ import io
 import os
 import insightface
 import numpy as np
+import time
+import sys
+
+sys.path.append("D:\내 레포\code\SimSwap")
+from myFunc import get_embedding, load_models, print_path
 
 def image_to_bytes(image):
     img_byte_array = io.BytesIO()
@@ -87,26 +92,35 @@ def show_resultPage():
 
     # 설명
     description = st.container()
-    description.write("result 관련 설명...")
+    description.write("결과를 확인하고 원하는 이미지를 다운할 수 있습니다. ")
     
     st.divider()
 
-    # reference 이미지
-    refs = get_reference_images(st.session_state.domain, st.session_state.gender, st.session_state.src)
+    # test
+    print_path()
+    app, model = load_models()
+    embedding_vec = get_embedding(app, model)[0]
+    st.write(embedding_vec)
 
-    # result 이미지
-    results = get_result_images(st.session_state.src, refs)
+    # with st.spinner('wait...'):
+    #     time.sleep(1)
 
-    cols = st.columns(3)
-    for i in range(3):
-        col = cols[i]
+    # # reference 이미지
+    # refs = get_reference_images(st.session_state.domain, st.session_state.gender, st.session_state.src)
+
+    # # result 이미지
+    # results = get_result_images(st.session_state.src, refs)
+
+    # cols = st.columns(3)
+    # for i in range(3):
+    #     col = cols[i]
         
-        # image
-        col.image(results[i])
+    #     # image
+    #     col.image(results[i])
 
-        # download button
-        img_byte = image_to_bytes(results[i])
-        col.download_button("다운로드", data=img_byte, file_name=f"{st.session_state.domain}_{st.session_state.gender}_{i}.jpg", use_container_width=True)
+    #     # download button
+    #     img_byte = image_to_bytes(results[i])
+    #     col.download_button("다운로드", data=img_byte, file_name=f"image{i}.jpg", use_container_width=True)
 
     # button
     buttons = st.container()
