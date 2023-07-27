@@ -6,9 +6,9 @@ import insightface
 import numpy as np
 import time
 import sys
-
 sys.path.append("code\SimSwap") #todo : 경로 수정
-from myFunc import get_embedding, load_models, print_path
+
+from myFunc import get_embedding, load_models
 
 def image_to_bytes(image):
     img_byte_array = io.BytesIO()
@@ -29,31 +29,35 @@ def load_embedding_vectors(path):
 
 def get_reference_images(domain, gender, src):
     
-    # dataset path
-    path = "serving/data" # todo : domain + gender에 따라 path 설정
-    files = os.listdir(path)
-    files = [file for file in files if file.lower().endswith(('.jpg', '.jpeg', '.png'))]
+    # # dataset path
+    # path = "serving/data" # todo : domain + gender에 따라 path 설정
+    # files = os.listdir(path)
+    # files = [file for file in files if file.lower().endswith(('.jpg', '.jpeg', '.png'))]
 
-    # ref 이미지 embedding vector 읽어오기
-    ref_vectors = load_embedding_vectors(path)
+    # # ref 이미지 embedding vector 읽어오기
+    # ref_vectors = load_embedding_vectors(path)
 
-    # src embedding vector 구하기
-    model = load_insight_model()
-    src = np.array(Image.open(src))
-    src_vector = model.get(src)[0]['embedding']
+    # # src embedding vector 구하기
+    # model = load_insight_model()
+    # src = np.array(Image.open(src))
+    # src_vector = model.get(src)[0]['embedding']
 
-    # cosine similarity 
-    similarities = np.dot(ref_vectors, src_vector) / (np.linalg.norm(ref_vectors, axis=1) * np.linalg.norm(src_vector))
+    # # cosine similarity 
+    # similarities = np.dot(ref_vectors, src_vector) / (np.linalg.norm(ref_vectors, axis=1) * np.linalg.norm(src_vector))
 
-    # 가장 유사한 이미지 3개 
-    top3_img_idx = np.argsort(similarities)[::-1][:3]
+    # # 가장 유사한 이미지 3개 
+    # top3_img_idx = np.argsort(similarities)[::-1][:3]
+
+    # results = []
+    # for idx in top3_img_idx:
+    #     file = files[idx]
+    #     img = Image.open(os.path.join(path, file))
+    #     results.append(img)
 
     results = []
-    for idx in top3_img_idx:
-        file = files[idx]
-        img = Image.open(os.path.join(path, file))
-        results.append(img)
-
+    results.append(Image.open('serving/data/id_f_1.jpg'))
+    results.append(Image.open('serving/data/id_f_2.jpg'))
+    results.append(Image.open('serving/data/id_f_3.jpg'))
     return results
 
 def get_result_images(src, refs):
@@ -97,9 +101,8 @@ def show_resultPage():
     st.divider()
 
     # test
-    print_path()
     app, model = load_models()
-    embedding_vec = get_embedding(app, model)[0]
+    embedding_vec = get_embedding(app, model, st.session_state.src)[0]
     st.write(embedding_vec)
 
     # with st.spinner('wait...'):

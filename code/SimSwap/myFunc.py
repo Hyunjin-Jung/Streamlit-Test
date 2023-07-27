@@ -1,7 +1,4 @@
 
-def print_path():
-    import os
-    print(os.getcwd())
 
 def load_models():
     # load detect and crop model
@@ -23,19 +20,20 @@ def load_models():
     return app, model
 
 
-def get_embedding(app, model):
+def get_embedding(app, model, img):
     # embedding vector
     import cv2
     from PIL import Image
     import torch.nn.functional as F
     from torchvision import transforms
+    import numpy as np
 
     transformer_Arcface = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
 
-    img = cv2.imread("serving/data/example/id.jpg")
+    img = np.array(Image.open(img))
     img_crop, _ = app.get(img, 224)
     img_crop = Image.fromarray(cv2.cvtColor(img_crop[0],cv2.COLOR_BGR2RGB))
 
