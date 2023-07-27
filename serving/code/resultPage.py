@@ -7,7 +7,7 @@ import numpy as np
 import time
 import sys
 
-sys.path.append("D:\내 레포\code\SimSwap")
+sys.path.append("code\SimSwap") #todo : 경로 수정
 from myFunc import get_embedding, load_models, print_path
 
 def image_to_bytes(image):
